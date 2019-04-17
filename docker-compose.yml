@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 networks:
   app-tier:
@@ -8,6 +8,7 @@ services:
   elasticsearch:
     image: 'bitnami/elasticsearch:6.7.0'
     container_name: elasticsearch
+#    user: "1001"
     environment:
 #     - cluster.name=docker-cluster
      - bootstrap.memory_lock=true
@@ -31,6 +32,7 @@ services:
   kibana:
     image: 'bitnami/kibana:6.7.0'
     container_name: kibana
+#    user: "1001"
     networks:
       - app-tier
     ports:
@@ -46,8 +48,9 @@ services:
   grafana:
     image: 'bitnami/grafana:6'
     container_name: grafana
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-kubernetes-app,grafana-example-app,grafana-clock-panel,grafana-simple-json-datasource,alexanderzobnin-zabbix-app
+#    user: "1001"
+#    environment:
+#      - GF_INSTALL_PLUGINS=grafana-kubernetes-app,grafana-example-app,grafana-clock-panel,grafana-simple-json-datasource,alexanderzobnin-zabbix-app
     networks:
       - app-tier
     ports:
@@ -60,6 +63,7 @@ services:
   logstash:
     image: 'logstash:6.7.0'
     container_name: logstash
+#    user: "1001"
     networks:
       - app-tier
 #    ports:
@@ -69,8 +73,6 @@ services:
     volumes:
 #      - '/bitnami/logstash/config:/usr/share/logstash/config'
       - '/bitnami/logstash/files:/files'
-    depends_on:
-      - elasticsearch
 
 volumes:
   elasticsearch_data:
@@ -79,5 +81,5 @@ volumes:
     driver: local
   grafana_data:
     driver: local
-#  logstash_data:
-#    driver: local
+  logstash_data:
+    driver: local
