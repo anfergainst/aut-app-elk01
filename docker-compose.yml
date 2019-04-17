@@ -1,0 +1,83 @@
+version: '2'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  elasticsearch:
+    image: 'bitnami/elasticsearch:6.7.0'
+    container_name: elasticsearch
+    environment:
+#     - cluster.name=docker-cluster
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ulimits:
+#     memlock:
+#     soft: -1
+#     hard: -1
+    networks:
+      - app-tier
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+      - '9201:9201'
+    volumes:
+      - '/bitnami/elasticsearch/data:/bitnami/elasticsearch/data'
+      - '/bitnami/elasticsearch/plugins:/opt/bitnami/elasticsearch/plugins'
+      - '/bitnami/elasticsearch/files:/files'
+      - '/bitnami/elasticsearch/config/readonlyrest.yml:/opt/bitnami/elasticsearch/config/readonlyrest.yml'
+#      - '/bitnami/elasticsearch/config/elasticsearch.yml:/opt/bitnami/elasticsearch/config/elasticsearch.yml'
+  kibana:
+    image: 'bitnami/kibana:6.7.0'
+    container_name: kibana
+    networks:
+      - app-tier
+    ports:
+      - '5601:5601'
+#    environment:
+#      - KIBANA_ELASTICSEARCH_URL=elasticsearch
+#      - KIBANA_ELASTICSEARCH_PORT=9200
+    volumes:
+      - '/bitnami/kibana:/bitnami'
+      - '/bitnami/kibana_files:/files'
+    depends_on:
+      - elasticsearch
+  grafana:
+    image: 'bitnami/grafana:6'
+    container_name: grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-kubernetes-app,grafana-example-app,grafana-clock-panel,grafana-simple-json-datasource,alexanderzobnin-zabbix-app
+    networks:
+      - app-tier
+    ports:
+      - '3000:3000'
+#    user: "1001"
+    volumes:
+#      - '/bitnami/grafana/data/grafana.ini:/opt/bitnami/grafana/conf/grafana.ini'
+      - '/bitnami/grafana/data:/opt/bitnami/grafana/data'
+      - '/bitnami/grafana/files:/files'
+  logstash:
+    image: 'logstash:6.7.0'
+    container_name: logstash
+    networks:
+      - app-tier
+#    ports:
+#      - '5601:5601'
+#    environment:
+#      - 
+    volumes:
+#      - '/bitnami/logstash/config:/usr/share/logstash/config'
+      - '/bitnami/logstash/files:/files'
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elasticsearch_data:
+    driver: local
+  kibana_data:
+    driver: local
+  grafana_data:
+    driver: local
+#  logstash_data:
+#    driver: local

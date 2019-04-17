@@ -1,0 +1,10 @@
+http.host: "0.0.0.0"
+#xpack.monitoring.elasticsearch.hosts: http://elasticsearch:9200
+#xpack.monitoring.elasticsearch.username: user
+#xpack.monitoring.elasticsearch.password: password
+#xpack.monitoring.elasticsearch.url: http://elasticsearch:9200
+
+xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch:9200"] 
+#xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch:9200", "http://es-prod-node-2:9200"] 
+xpack.monitoring.elasticsearch.username: "user"
+xpack.monitoring.elasticsearch.password: "password"
