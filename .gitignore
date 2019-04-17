@@ -2,10 +2,13 @@
 elasticsearch/data/
 elasticsearch/plugins/
 grafana/data/
-kibana/
+kibana/installedPlugins/
+kibana/data/
 logstash/files/
 
 .DS_Store
+.restored
+.initialized
 
 # ignore all logs
 #*.log
